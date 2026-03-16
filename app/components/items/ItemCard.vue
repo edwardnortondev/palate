@@ -4,27 +4,31 @@ import type { Item } from '../../../shared/types'
 const props = defineProps<{ item: Item }>()
 
 const typeLabel: Record<string, string> = {
-  image: 'Image',
-  link: 'Link',
-  quote: 'Quote',
-  film: 'Film',
-  music: 'Music',
-  place: 'Place',
-  fashion: 'Fashion',
+  image: 'image',
+  link: 'link',
+  quote: 'quote',
+  film: 'film',
+  music: 'music',
+  place: 'place',
+  fashion: 'fashion',
 }
 </script>
 
 <template>
   <NuxtLink
     :to="`/item/${item.id}`"
-    class="group block bg-white rounded-lg overflow-hidden border border-stone-200 hover:border-stone-300 hover:shadow-sm transition-all"
+    class="group block overflow-hidden"
+    style="background-color: #FFFFFF; border-radius: var(--radius-md); border: 1px solid var(--color-border-default); box-shadow: var(--shadow-xs); transition: box-shadow 100ms ease, border-color 100ms ease;"
+    @mouseenter="($event.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-sm)'; ($event.currentTarget as HTMLElement).style.borderColor = 'var(--color-border-strong)'"
+    @mouseleave="($event.currentTarget as HTMLElement).style.boxShadow = 'var(--shadow-xs)'; ($event.currentTarget as HTMLElement).style.borderColor = 'var(--color-border-default)'"
   >
     <!-- Image (if present) -->
-    <div v-if="item.imageUrl" class="aspect-[4/3] overflow-hidden bg-stone-100">
+    <div v-if="item.imageUrl" class="aspect-[4/3] overflow-hidden" style="background-color: var(--color-bg-secondary);">
       <NuxtImg
         :src="item.imageUrl"
         :alt="item.title ?? ''"
-        class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500"
+        class="w-full h-full object-cover group-hover:scale-[1.02]"
+        style="transition: transform 350ms ease; border-radius: var(--radius-xl) var(--radius-xl) 0 0;"
         loading="lazy"
       />
     </div>
@@ -32,9 +36,10 @@ const typeLabel: Record<string, string> = {
     <!-- Quote card (no image) -->
     <div
       v-else-if="item.type === 'quote'"
-      class="p-5 min-h-[120px] flex items-center bg-stone-50"
+      class="p-6 min-h-[120px] flex items-center"
+      style="background-color: var(--color-bg-secondary);"
     >
-      <blockquote class="font-serif text-base text-stone-700 leading-relaxed">
+      <blockquote class="text-base leading-relaxed" style="color: var(--color-text-secondary);">
         "{{ item.content }}"
       </blockquote>
     </div>
@@ -42,19 +47,20 @@ const typeLabel: Record<string, string> = {
     <!-- Link / Music / other (no image) -->
     <div
       v-else
-      class="p-5 min-h-[80px] flex items-center bg-stone-50"
+      class="p-6 min-h-[80px] flex items-center"
+      style="background-color: var(--color-bg-secondary);"
     >
-      <span class="text-xs font-medium text-stone-400 uppercase tracking-widest">
+      <span class="text-xs font-medium" style="color: var(--color-text-tertiary); letter-spacing: 0.02em;">
         {{ typeLabel[item.type] ?? item.type }}
       </span>
     </div>
 
     <!-- Meta -->
     <div class="px-4 py-3">
-      <p v-if="item.title" class="text-sm font-medium text-stone-800 truncate leading-snug">
+      <p v-if="item.title" class="text-sm font-medium truncate leading-snug" style="color: var(--color-text-primary);">
         {{ item.title }}
       </p>
-      <p v-if="item.description" class="text-xs text-stone-500 mt-0.5 truncate">
+      <p v-if="item.description" class="text-xs mt-0.5 truncate" style="color: var(--color-text-secondary);">
         {{ item.description }}
       </p>
       <!-- Tags -->
@@ -62,7 +68,8 @@ const typeLabel: Record<string, string> = {
         <span
           v-for="tag in item.tags.slice(0, 3)"
           :key="tag.id"
-          class="text-xs text-stone-400 bg-stone-100 rounded px-1.5 py-0.5"
+          class="text-xs px-1.5 py-0.5"
+          style="color: var(--color-text-tertiary); background-color: var(--color-bg-secondary); border-radius: var(--radius-sm); letter-spacing: 0.02em;"
         >
           {{ tag.name }}
         </span>

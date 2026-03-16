@@ -12,11 +12,18 @@ function onSearch() {
 </script>
 
 <template>
-  <header class="sticky top-0 z-50 bg-stone-50/90 backdrop-blur-sm border-b border-stone-200">
-    <div class="max-w-7xl mx-auto px-6 h-14 flex items-center gap-6">
+  <header
+    class="sticky top-0 z-50 backdrop-blur-sm"
+    style="background-color: rgba(245, 243, 240, 0.9); border-bottom: 1px solid var(--color-border-default);"
+  >
+    <div class="mx-auto px-6 h-14 flex items-center gap-6" style="max-width: 1120px;">
       <!-- Wordmark -->
-      <NuxtLink to="/" class="font-serif text-lg text-stone-900 tracking-tight shrink-0">
-        Palate
+      <NuxtLink
+        to="/"
+        class="text-base shrink-0"
+        style="font-weight: 600; color: var(--color-text-primary); letter-spacing: -0.01em;"
+      >
+        palate
       </NuxtLink>
 
       <!-- Search -->
@@ -25,8 +32,9 @@ function onSearch() {
           <input
             v-model="searchInput"
             type="search"
-            placeholder="Search your archive…"
-            class="w-full text-sm bg-stone-100 border-0 rounded-md px-3 py-1.5 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300"
+            placeholder="search your archive…"
+            class="w-full text-sm px-3 py-1.5 focus:outline-none"
+            style="background-color: var(--color-bg-secondary); border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); color: var(--color-text-primary); transition: border-color 100ms ease;"
           >
         </form>
       </div>
@@ -36,9 +44,12 @@ function onSearch() {
       <!-- Save button -->
       <NuxtLink
         to="/save"
-        class="text-sm font-medium text-stone-600 hover:text-stone-900 transition-colors"
+        class="text-sm"
+        style="font-weight: 500; color: var(--color-text-secondary); transition: color 100ms ease;"
+        @mouseenter="($event.target as HTMLElement).style.color = 'var(--color-text-primary)'"
+        @mouseleave="($event.target as HTMLElement).style.color = 'var(--color-text-secondary)'"
       >
-        + Save
+        + save
       </NuxtLink>
     </div>
   </header>

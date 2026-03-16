@@ -20,6 +20,12 @@ export default defineNuxtConfig({
     public: {},
   },
 
+  css: ['~/assets/css/main.css'],
+
+  components: [
+    { path: '~/components', pathPrefix: false },
+  ],
+
   devtools: { enabled: true },
   typescript: { strict: true },
 })

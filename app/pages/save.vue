@@ -10,13 +10,13 @@ const saving = ref(false)
 const error = ref<string | null>(null)
 
 const types: { label: string; value: ItemType }[] = [
-  { label: 'Image', value: 'image' },
-  { label: 'Link', value: 'link' },
-  { label: 'Quote', value: 'quote' },
-  { label: 'Film', value: 'film' },
-  { label: 'Music', value: 'music' },
-  { label: 'Place', value: 'place' },
-  { label: 'Fashion', value: 'fashion' },
+  { label: 'image', value: 'image' },
+  { label: 'link', value: 'link' },
+  { label: 'quote', value: 'quote' },
+  { label: 'film', value: 'film' },
+  { label: 'music', value: 'music' },
+  { label: 'place', value: 'place' },
+  { label: 'fashion', value: 'fashion' },
 ]
 
 const form = reactive<CreateItemInput & { tagInput: string }>({
@@ -59,34 +59,47 @@ async function handleSubmit() {
     saving.value = false
   }
 }
+
+const inputStyle = 'width: 100%; font-size: 0.875rem; border: 1px solid var(--color-border-default); border-radius: var(--radius-sm); padding: 0.5rem 0.75rem; color: var(--color-text-primary); background-color: #FFFFFF; transition: border-color 100ms ease;'
 </script>
 
 <template>
   <div class="max-w-lg mx-auto">
     <NuxtLink
       to="/"
-      class="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 mb-8 transition-colors"
+      class="inline-flex items-center gap-1.5 text-xs mb-8"
+      style="color: var(--color-text-tertiary); transition: color 100ms ease;"
+      @mouseenter="($event.target as HTMLElement).style.color = 'var(--color-text-primary)'"
+      @mouseleave="($event.target as HTMLElement).style.color = 'var(--color-text-tertiary)'"
     >
-      ← Archive
+      ← archive
     </NuxtLink>
 
-    <h1 class="font-serif text-2xl text-stone-900 mb-8">
+    <h1 class="text-2xl mb-8" style="font-weight: 600; color: var(--color-text-primary); letter-spacing: -0.01em;">
       Save something
     </h1>
 
     <form class="space-y-5" @submit.prevent="handleSubmit">
       <!-- Type -->
       <div>
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-2">Type</label>
+        <label class="block text-xs font-medium mb-2" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          type
+        </label>
         <div class="flex flex-wrap gap-2">
           <button
             v-for="t in types"
             :key="t.value"
             type="button"
-            class="text-xs px-3 py-1.5 rounded-full border transition-colors"
-            :class="form.type === t.value
-              ? 'bg-stone-800 text-stone-50 border-stone-800'
-              : 'bg-white text-stone-600 border-stone-200 hover:border-stone-400'"
+            class="text-xs px-3 py-1.5"
+            :style="{
+              borderRadius: 'var(--radius-md)',
+              border: '1px solid',
+              borderColor: form.type === t.value ? 'var(--color-bg-inverse)' : 'var(--color-border-default)',
+              backgroundColor: form.type === t.value ? 'var(--color-bg-inverse)' : '#FFFFFF',
+              color: form.type === t.value ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
+              fontWeight: form.type === t.value ? '500' : '400',
+              transition: 'all 100ms ease',
+            }"
             @click="form.type = t.value"
           >
             {{ t.label }}
@@ -96,90 +109,110 @@ async function handleSubmit() {
 
       <!-- Title -->
       <div>
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-1.5">
-          Title
+        <label class="block text-xs font-medium mb-1.5" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          title
         </label>
         <input
           v-model="form.title"
           type="text"
           placeholder="What is this?"
-          class="w-full text-sm border border-stone-200 rounded-md px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300"
+          :style="inputStyle"
+          class="focus:outline-none"
         >
       </div>
 
       <!-- Quote content (shown only for quote type) -->
       <div v-if="form.type === 'quote'">
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-1.5">Quote</label>
+        <label class="block text-xs font-medium mb-1.5" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          quote
+        </label>
         <textarea
           v-model="form.content"
           rows="3"
           placeholder="The words themselves…"
-          class="w-full text-sm border border-stone-200 rounded-md px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 resize-none font-serif"
+          :style="inputStyle + ' resize: none;'"
+          class="focus:outline-none"
         />
       </div>
 
       <!-- Image URL -->
       <div v-if="['image', 'film', 'place', 'fashion'].includes(form.type)">
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-1.5">Image URL</label>
+        <label class="block text-xs font-medium mb-1.5" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          image url
+        </label>
         <input
           v-model="form.imageUrl"
           type="url"
           placeholder="https://…"
-          class="w-full text-sm border border-stone-200 rounded-md px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300"
+          :style="inputStyle"
+          class="focus:outline-none"
         >
       </div>
 
       <!-- Source URL -->
       <div v-if="form.type !== 'quote'">
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-1.5">Source URL</label>
+        <label class="block text-xs font-medium mb-1.5" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          source url
+        </label>
         <input
           v-model="form.sourceUrl"
           type="url"
           placeholder="https://…"
-          class="w-full text-sm border border-stone-200 rounded-md px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300"
+          :style="inputStyle"
+          class="focus:outline-none"
         >
       </div>
 
       <!-- Notes -->
       <div>
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-1.5">Notes</label>
+        <label class="block text-xs font-medium mb-1.5" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          notes
+        </label>
         <textarea
           v-model="form.notes"
           rows="3"
           placeholder="Why does this move you?"
-          class="w-full text-sm border border-stone-200 rounded-md px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300 resize-none"
+          :style="inputStyle + ' resize: none;'"
+          class="focus:outline-none"
         />
       </div>
 
       <!-- Tags -->
       <div>
-        <label class="block text-xs font-medium text-stone-500 uppercase tracking-wider mb-1.5">Tags</label>
+        <label class="block text-xs font-medium mb-1.5" style="color: var(--color-text-secondary); letter-spacing: 0.02em;">
+          tags
+        </label>
         <div class="flex gap-2 mb-2">
           <input
             v-model="form.tagInput"
             type="text"
-            placeholder="Add a tag…"
-            class="flex-1 text-sm border border-stone-200 rounded-md px-3 py-2 text-stone-800 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-stone-300"
+            placeholder="add a tag…"
+            :style="inputStyle + ' flex: 1;'"
+            class="focus:outline-none"
             @keydown.enter.prevent="addTag"
           >
           <button
             type="button"
-            class="text-sm px-3 py-2 bg-stone-100 text-stone-600 rounded-md hover:bg-stone-200 transition-colors"
+            class="text-sm px-3 py-2"
+            style="background-color: var(--color-bg-secondary); color: var(--color-text-secondary); border-radius: var(--radius-md); transition: background-color 100ms ease;"
             @click="addTag"
           >
-            Add
+            add
           </button>
         </div>
         <div v-if="form.tagNames?.length" class="flex flex-wrap gap-1.5">
           <span
             v-for="tag in form.tagNames"
             :key="tag"
-            class="inline-flex items-center gap-1 text-xs bg-stone-100 text-stone-600 rounded-full px-2.5 py-1"
+            class="inline-flex items-center gap-1 text-xs px-2.5 py-1"
+            style="background-color: var(--color-bg-secondary); color: var(--color-text-secondary); border-radius: 9999px;"
           >
             {{ tag }}
             <button
               type="button"
-              class="text-stone-400 hover:text-stone-700"
+              style="color: var(--color-text-tertiary); transition: color 100ms ease;"
+              @mouseenter="($event.target as HTMLElement).style.color = 'var(--color-text-primary)'"
+              @mouseleave="($event.target as HTMLElement).style.color = 'var(--color-text-tertiary)'"
               @click="removeTag(tag)"
             >
               ×
@@ -189,7 +222,7 @@ async function handleSubmit() {
       </div>
 
       <!-- Error -->
-      <p v-if="error" class="text-xs text-red-500">
+      <p v-if="error" class="text-xs" style="color: var(--color-error);">
         {{ error }}
       </p>
 
@@ -198,9 +231,10 @@ async function handleSubmit() {
         <button
           type="submit"
           :disabled="saving"
-          class="text-sm font-medium px-5 py-2 bg-stone-800 text-stone-50 rounded-md hover:bg-stone-700 disabled:opacity-50 transition-colors"
+          class="text-sm px-5 py-2 disabled:opacity-40 disabled:cursor-not-allowed"
+          style="font-weight: 500; background-color: var(--color-bg-inverse); color: var(--color-text-inverse); border-radius: var(--radius-md); transition: opacity 100ms ease;"
         >
-          {{ saving ? 'Saving…' : 'Save to archive' }}
+          {{ saving ? 'saving…' : 'save to archive' }}
         </button>
       </div>
     </form>

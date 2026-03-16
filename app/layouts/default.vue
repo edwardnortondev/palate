@@ -13,9 +13,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-stone-50">
+  <div class="min-h-screen" style="background-color: var(--color-bg-primary);">
     <AppHeader />
-    <main class="max-w-7xl mx-auto px-6 py-8">
+    <main class="mx-auto px-6 py-8" style="max-width: 1120px;">
       <slot />
     </main>
   </div>

@@ -11,7 +11,7 @@ useHead({ title: 'Palate — Your taste archive' })
     <FilterBar />
 
     <!-- Loading -->
-    <div v-if="itemsStore.loading" class="flex justify-center py-24 text-stone-400 text-sm">
+    <div v-if="itemsStore.loading" class="flex justify-center py-24 text-sm" style="color: var(--color-text-tertiary);">
       Loading…
     </div>
 
@@ -20,13 +20,18 @@ useHead({ title: 'Palate — Your taste archive' })
       v-else-if="!itemsStore.items.length"
       class="flex flex-col items-center justify-center py-32 text-center"
     >
-      <p class="font-serif text-xl text-stone-600 mb-2">Your archive is empty.</p>
-      <p class="text-sm text-stone-400 mb-6">Save the things that move you.</p>
+      <p class="text-xl mb-2" style="color: var(--color-text-secondary); font-weight: 600; letter-spacing: -0.01em;">
+        Your archive is empty.
+      </p>
+      <p class="text-sm mb-6" style="color: var(--color-text-tertiary);">
+        Save the things that move you.
+      </p>
       <NuxtLink
         to="/save"
-        class="text-sm font-medium px-4 py-2 bg-stone-800 text-stone-50 rounded-md hover:bg-stone-700 transition-colors"
+        class="text-sm px-5 py-2"
+        style="font-weight: 500; background-color: var(--color-bg-inverse); color: var(--color-text-inverse); border-radius: var(--radius-md); transition: opacity 100ms ease;"
       >
-        Save something
+        save something
       </NuxtLink>
     </div>
 

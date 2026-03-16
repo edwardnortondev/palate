@@ -7,14 +7,14 @@ const itemsStore = useItemsStore()
 const tagsStore = useTagsStore()
 
 const types: { label: string; value: ItemType | null }[] = [
-  { label: 'All', value: null },
-  { label: 'Images', value: 'image' },
-  { label: 'Quotes', value: 'quote' },
-  { label: 'Links', value: 'link' },
-  { label: 'Films', value: 'film' },
-  { label: 'Music', value: 'music' },
-  { label: 'Places', value: 'place' },
-  { label: 'Fashion', value: 'fashion' },
+  { label: 'all', value: null },
+  { label: 'images', value: 'image' },
+  { label: 'quotes', value: 'quote' },
+  { label: 'links', value: 'link' },
+  { label: 'films', value: 'film' },
+  { label: 'music', value: 'music' },
+  { label: 'places', value: 'place' },
+  { label: 'fashion', value: 'fashion' },
 ]
 </script>
 
@@ -25,10 +25,16 @@ const types: { label: string; value: ItemType | null }[] = [
       <button
         v-for="t in types"
         :key="t.label"
-        class="text-xs px-3 py-1.5 rounded-full border transition-colors"
-        :class="itemsStore.filterType === t.value
-          ? 'bg-stone-800 text-stone-50 border-stone-800'
-          : 'bg-white text-stone-600 border-stone-200 hover:border-stone-400'"
+        class="text-xs px-3 py-1.5"
+        :style="{
+          borderRadius: 'var(--radius-md)',
+          border: '1px solid',
+          borderColor: itemsStore.filterType === t.value ? 'var(--color-bg-inverse)' : 'var(--color-border-default)',
+          backgroundColor: itemsStore.filterType === t.value ? 'var(--color-bg-inverse)' : '#FFFFFF',
+          color: itemsStore.filterType === t.value ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
+          fontWeight: itemsStore.filterType === t.value ? '500' : '400',
+          transition: 'all 100ms ease',
+        }"
         @click="itemsStore.setFilter(t.value)"
       >
         {{ t.label }}
@@ -40,14 +46,21 @@ const types: { label: string; value: ItemType | null }[] = [
       <button
         v-for="tag in tagsStore.tags.slice(0, 12)"
         :key="tag.slug"
-        class="text-xs px-2.5 py-1 rounded border transition-colors"
-        :class="itemsStore.filterTag === tag.slug
-          ? 'bg-stone-800 text-stone-50 border-stone-800'
-          : 'bg-stone-50 text-stone-500 border-stone-200 hover:border-stone-400'"
+        class="text-xs px-2.5 py-1"
+        :style="{
+          borderRadius: 'var(--radius-sm)',
+          border: '1px solid',
+          borderColor: itemsStore.filterTag === tag.slug ? 'var(--color-bg-inverse)' : 'var(--color-border-default)',
+          backgroundColor: itemsStore.filterTag === tag.slug ? 'var(--color-bg-inverse)' : 'var(--color-bg-primary)',
+          color: itemsStore.filterTag === tag.slug ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
+          fontWeight: itemsStore.filterTag === tag.slug ? '500' : '400',
+          transition: 'all 100ms ease',
+          letterSpacing: '0.02em',
+        }"
         @click="itemsStore.setTagFilter(itemsStore.filterTag === tag.slug ? null : tag.slug)"
       >
         {{ tag.name }}
-        <span class="text-stone-400 ml-0.5">{{ tag.count }}</span>
+        <span style="color: var(--color-text-tertiary); margin-left: 2px;">{{ tag.count }}</span>
       </button>
     </div>
   </div>

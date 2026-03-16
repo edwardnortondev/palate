@@ -26,7 +26,7 @@ function formatDate(iso: string) {
 </script>
 
 <template>
-  <div v-if="error" class="py-24 text-center text-stone-400 text-sm">
+  <div v-if="error" class="py-24 text-center text-sm" style="color: var(--color-text-tertiary);">
     Item not found.
   </div>
 
@@ -34,13 +34,20 @@ function formatDate(iso: string) {
     <!-- Back -->
     <NuxtLink
       to="/"
-      class="inline-flex items-center gap-1.5 text-xs text-stone-400 hover:text-stone-700 mb-8 transition-colors"
+      class="inline-flex items-center gap-1.5 text-xs mb-8"
+      style="color: var(--color-text-tertiary); transition: color 100ms ease;"
+      @mouseenter="($event.target as HTMLElement).style.color = 'var(--color-text-primary)'"
+      @mouseleave="($event.target as HTMLElement).style.color = 'var(--color-text-tertiary)'"
     >
-      ← Archive
+      ← archive
     </NuxtLink>
 
     <!-- Image -->
-    <div v-if="item.imageUrl" class="rounded-lg overflow-hidden mb-8 bg-stone-100">
+    <div
+      v-if="item.imageUrl"
+      class="overflow-hidden mb-8"
+      style="border-radius: var(--radius-lg); background-color: var(--color-bg-secondary);"
+    >
       <NuxtImg
         :src="item.imageUrl"
         :alt="item.title ?? ''"
@@ -51,7 +58,8 @@ function formatDate(iso: string) {
     <!-- Quote display -->
     <blockquote
       v-else-if="item.type === 'quote'"
-      class="font-serif text-2xl text-stone-800 leading-relaxed mb-8 border-l-2 border-stone-200 pl-6"
+      class="text-2xl leading-relaxed mb-8 pl-6"
+      style="color: var(--color-text-primary); border-left: 2px solid var(--color-border-default); font-weight: 400;"
     >
       "{{ item.content }}"
     </blockquote>
@@ -60,16 +68,23 @@ function formatDate(iso: string) {
     <div class="space-y-4">
       <div class="flex items-start justify-between gap-4">
         <div>
-          <h1 v-if="item.title" class="text-xl font-medium text-stone-900 leading-tight">
+          <h1
+            v-if="item.title"
+            class="text-xl leading-tight"
+            style="font-weight: 600; color: var(--color-text-primary); letter-spacing: -0.01em;"
+          >
             {{ item.title }}
           </h1>
-          <p v-if="item.description" class="text-sm text-stone-500 mt-1">
+          <p v-if="item.description" class="text-sm mt-1" style="color: var(--color-text-secondary);">
             {{ item.description }}
           </p>
         </div>
 
         <!-- Type badge -->
-        <span class="shrink-0 text-xs uppercase tracking-widest text-stone-400 font-medium mt-1">
+        <span
+          class="shrink-0 text-xs font-medium mt-1"
+          style="color: var(--color-text-tertiary); letter-spacing: 0.02em;"
+        >
           {{ item.type }}
         </span>
       </div>
@@ -80,13 +95,20 @@ function formatDate(iso: string) {
         :href="item.sourceUrl"
         target="_blank"
         rel="noopener noreferrer"
-        class="block text-xs text-stone-400 hover:text-stone-600 underline underline-offset-2 truncate transition-colors"
+        class="block text-xs underline underline-offset-2 truncate"
+        style="color: var(--color-text-tertiary); transition: color 100ms ease;"
+        @mouseenter="($event.target as HTMLElement).style.color = 'var(--color-text-secondary)'"
+        @mouseleave="($event.target as HTMLElement).style.color = 'var(--color-text-tertiary)'"
       >
         {{ item.sourceUrl }}
       </a>
 
       <!-- Notes -->
-      <p v-if="item.notes" class="text-sm text-stone-600 leading-relaxed bg-stone-50 rounded-md p-4">
+      <p
+        v-if="item.notes"
+        class="text-sm leading-relaxed p-4"
+        style="color: var(--color-text-secondary); background-color: var(--color-bg-secondary); border-radius: var(--radius-md);"
+      >
         {{ item.notes }}
       </p>
 
@@ -95,22 +117,29 @@ function formatDate(iso: string) {
         <span
           v-for="tag in item.tags"
           :key="tag.id"
-          class="text-xs text-stone-500 bg-stone-100 rounded-full px-3 py-1"
+          class="text-xs px-3 py-1"
+          style="color: var(--color-text-secondary); background-color: var(--color-bg-secondary); border-radius: 9999px; letter-spacing: 0.02em;"
         >
           {{ tag.name }}
         </span>
       </div>
 
       <!-- Saved date + actions -->
-      <div class="flex items-center justify-between pt-4 border-t border-stone-100">
-        <span class="text-xs text-stone-400">
+      <div
+        class="flex items-center justify-between pt-4"
+        style="border-top: 1px solid var(--color-border-default);"
+      >
+        <span class="text-xs" style="color: var(--color-text-tertiary);">
           Saved {{ formatDate(item.savedAt) }}
         </span>
         <button
-          class="text-xs text-stone-400 hover:text-red-500 transition-colors"
+          class="text-xs"
+          style="color: var(--color-text-tertiary); transition: color 100ms ease;"
+          @mouseenter="($event.target as HTMLElement).style.color = 'var(--color-error)'"
+          @mouseleave="($event.target as HTMLElement).style.color = 'var(--color-text-tertiary)'"
           @click="handleDelete"
         >
-          Remove
+          remove
         </button>
       </div>
     </div>
