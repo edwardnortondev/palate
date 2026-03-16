@@ -1,0 +1,16 @@
+---
+description: Drizzle ORM and database conventions
+globs: ["db/**/*.ts", "server/utils/db.ts"]
+---
+
+# Database Rules (Drizzle ORM)
+
+- Schema lives in `db/schema/index.ts`.
+- Use `uuid` primary keys with `.defaultRandom()`.
+- Column names: `snake_case` in DB, `camelCase` in TypeScript (Drizzle maps automatically).
+- Always include `createdAt` and `updatedAt` timestamps with `.defaultNow()`.
+- Foreign keys: `references(() => table.column, { onDelete: 'cascade' })`.
+- Define relations separately using `relations()` for the relational query API.
+- Database client is in `server/utils/db.ts` (auto-imported in server context).
+- Never create DB connections outside server context.
+- Generate migrations with `pnpm db:generate`, run with `pnpm db:migrate`.

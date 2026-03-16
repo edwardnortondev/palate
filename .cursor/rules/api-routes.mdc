@@ -1,0 +1,14 @@
+---
+description: Rules for Nitro server API routes
+globs: ["server/api/**/*.ts"]
+---
+
+# API Route Rules
+
+- Export `defineEventHandler` — no Express, no NestJS patterns.
+- Use Nitro utilities: `getQuery()`, `readBody()`, `getRouterParam()`, `createError()`, `setResponseStatus()`.
+- These are auto-imported in server context — do NOT manually import them.
+- Return typed responses matching interfaces in `shared/types/index.ts`.
+- File naming follows Nitro convention: `index.get.ts`, `index.post.ts`, `[id].delete.ts`.
+- For errors, use `throw createError({ statusCode: 404, statusMessage: 'Not found' })`.
+- The app runs in mock mode by default (`server/utils/mock-data.ts`). Real DB via `DATABASE_URL`.

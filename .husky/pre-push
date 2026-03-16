@@ -1,0 +1,7 @@
+branch=$(git rev-parse --abbrev-ref HEAD)
+if [ "$branch" = "main" ] || [ "$branch" = "master" ]; then
+  echo "\n\033[31m✖ Direct pushes to $branch are blocked.\033[0m"
+  echo "  Push from a feature branch and open a PR instead."
+  echo "  If this is a critical hotfix, use: git push --no-verify\n"
+  exit 1
+fi
