@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.nuxt/
+.output/
+dist/
+.data/
+
+# Test artifacts
+test-results/
+playwright-report/
+coverage/
+
+# Lock files (large, not useful for AI)
+pnpm-lock.yaml
+
+# Environment
+.env
+.env.local
+
+# OS
+.DS_Store
+
+# Generated
+db/migrations/

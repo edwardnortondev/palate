@@ -217,6 +217,32 @@ Docs are built with **Nuxt Content v3** and live in `content/docs/` inside the m
 
 Pages: overview, getting-started, architecture, api, database, standards, roadmap.
 
+## Git workflow
+
+### Branch protection
+
+**Never commit or push directly to `main` or `master`.** This is enforced by git hooks (`pre-commit` and `pre-push`).
+
+- Always create a feature branch first: `git checkout -b feat/your-change`
+- Push the feature branch and open a PR to merge into main.
+- The pre-commit hook will reject commits on main/master. The pre-push hook will reject pushes to main/master.
+- **Hotfix escape hatch:** If a critical hotfix absolutely must go to main, use `git push --no-verify` to bypass the pre-push hook. This should be rare and deliberate.
+
+### AI co-authoring
+
+When an AI agent (Claude Code, Cursor, Copilot, or any other AI assistant) creates a git commit, it **must** include a `Co-Authored-By` trailer identifying itself. This is mandatory — never omit it.
+
+```
+Co-Authored-By: <Agent Name> <noreply@<provider>.com>
+```
+
+Examples:
+- `Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>`
+- `Co-Authored-By: Cursor <noreply@cursor.com>`
+- `Co-Authored-By: GitHub Copilot <noreply@github.com>`
+
+This applies to all commits made by or with AI assistance — including amends, fixups, and squash commits.
+
 ## Comments
 
 Write comments that explain _why_, not _what_. If the code is clear, don't add a comment restating it.

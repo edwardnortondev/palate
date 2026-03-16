@@ -1,0 +1,16 @@
+---
+description: Rules for Vue/Nuxt component files
+globs: ["app/**/*.vue"]
+---
+
+# Vue Component Rules
+
+- Always use `<script setup lang="ts">` — no Options API.
+- Type props: `defineProps<{ title: string; count?: number }>()`.
+- Type emits: `defineEmits<{ (e: 'update', id: string): void }>()`.
+- Keep under ~150 lines. Extract sub-components if larger.
+- Do NOT manually import auto-imported APIs: `ref`, `computed`, `watch`, `useRoute`, `navigateTo`, `$fetch`.
+- DO explicitly import: Pinia stores (`import { useItemsStore } from '~/stores/items'`), shared types (`import type { Item } from '~/shared/types'`).
+- Use Tailwind utility classes with design tokens from `@theme`. No inline styles, no raw hex colors.
+- Use `:focus-visible` (not `:focus`) for focus states.
+- Phosphor Icons only, light weight, via `currentColor`.

@@ -1,0 +1,27 @@
+---
+description: Tailwind CSS v4 and Dieter Rams design system rules
+globs: ["app/**/*.vue", "app/assets/css/**/*.css"]
+---
+
+# Styling Rules — Dieter Rams / Braun Aesthetic
+
+## Tailwind CSS v4
+- All design tokens are in `@theme` in `app/assets/css/main.css`. There is NO `tailwind.config.js`.
+- Use semantic token classes: `bg-bg-primary`, `text-text-secondary`, `border-border-default`, `text-accent`.
+- Gradient syntax: `bg-linear-to-r` (NOT `bg-gradient-to-r` — Tailwind v4 change).
+- To add new tokens, add them to `@theme` in `main.css`.
+
+## Design Constraints
+- Colors: Warm neutrals only. Accent `#D4600C` is for primary actions only.
+- Border radius: 4px default (`rounded-md`). Never use 16px+ or bubbly corners.
+- Shadows: Warm-tinted, minimal (`--shadow-xs` at rest). No colored shadows.
+- Motion: 100ms hover, 200ms expand, 350ms page. No spring/bounce easing.
+- Typography: Inter font. Lowercase nav labels. Sentence case headings.
+- Icons: Phosphor Icons (light, 1.5px stroke, 20px). `currentColor` only.
+
+## Forbidden
+- No inline `style="..."` attributes.
+- No cool blue-greys or pure `#808080` greys.
+- No Tailwind default palette colors (`bg-red-500`, `text-blue-400`).
+- No `rounded-full` on containers (pills/avatars only).
+- No emoji as icons.

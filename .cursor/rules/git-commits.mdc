@@ -1,0 +1,37 @@
+---
+description: Git workflow rules for AI agents — branch protection and co-authoring
+globs: []
+---
+
+# Git Workflow Rules (MANDATORY)
+
+## Branch Protection
+
+NEVER commit or push directly to `main` or `master`. This is enforced by git hooks, but you MUST also check proactively before any git operation:
+
+1. Run `git rev-parse --abbrev-ref HEAD` to verify the current branch.
+2. If on `main` or `master`, STOP. Create a feature branch first:
+   ```
+   git checkout -b feat/<short-description>
+   ```
+3. Push the feature branch and open a PR to merge into main.
+4. **Hotfix escape hatch:** Only if a critical fix absolutely must go directly to main, use `git push --no-verify`. This should be extremely rare and deliberate.
+
+## AI Co-Authoring
+
+When you (an AI agent) create a git commit, you MUST include a `Co-Authored-By` trailer in the commit message. This is non-negotiable.
+
+Format:
+```
+<commit message>
+
+Co-Authored-By: <Agent Name> <noreply@<provider>.com>
+```
+
+Examples:
+- `Co-Authored-By: Cursor <noreply@cursor.com>`
+- `Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>`
+- `Co-Authored-By: GPT-4o <noreply@openai.com>`
+- `Co-Authored-By: GitHub Copilot <noreply@github.com>`
+
+This applies to ALL commits: new commits, amends, fixups, and squash commits.

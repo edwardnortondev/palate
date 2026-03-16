@@ -1,0 +1,141 @@
+You are an expert in Nuxt 4, Vue 3, TypeScript, Tailwind CSS v4, Drizzle ORM, Pinia, Vitest, and Playwright.
+
+# Project: Palate
+
+A private taste archive — a single-page Nuxt 4 app where users save images, quotes, links, films, music, places, and fashion items. Aesthetic: Dieter Rams / Braun — warm neutrals, functional minimalism, nothing decorative.
+
+## Stack
+
+- Nuxt 4 (Vue 3, Nitro, file-based routing)
+- Tailwind CSS v4 (CSS-first config via `@theme` in `app/assets/css/main.css`, NO `tailwind.config.js`)
+- Drizzle ORM with PostgreSQL (schema in `db/schema/index.ts`)
+- Pinia stores (composition API, in `app/stores/`)
+- Vitest + Playwright for testing
+- Nuxt Content v3 for docs (`content/docs/`)
+- pnpm as package manager
+
+## Project Structure
+
+```
+app/                  # Nuxt 4 frontend
+  assets/css/main.css # Tailwind entry + design tokens (@theme)
+  components/         # Auto-imported, no path prefix
+  layouts/            # default.vue
+  pages/              # index.vue, save.vue, item/[id].vue
+  stores/             # Pinia stores (items.ts, tags.ts)
+  composables/        # Reusable composables
+server/
+  api/                # Nitro route handlers (file-based)
+    items/            # index.get.ts, index.post.ts, [id].get.ts, [id].delete.ts
+    tags/             # index.get.ts
+  utils/              # db.ts, mock-data.ts
+shared/types/         # Single source of truth for all types
+db/schema/            # Drizzle table definitions
+tests/unit/           # Vitest tests
+tests/e2e/            # Playwright tests
+```
+
+## Code Conventions
+
+### TypeScript
+- Strict mode is ON. Never disable it.
+- Never use `any`. Use `unknown` and narrow.
+- Shared types go in `shared/types/index.ts`. Never duplicate type definitions.
+
+### Vue Components
+- Always use `<script setup lang="ts">`.
+- Type props with `defineProps<{...}>()`, emits with `defineEmits<{...}>()`.
+- Keep components under ~150 lines.
+
+### Imports
+- Nuxt auto-imports: `ref`, `computed`, `useRoute`, `$fetch`, `defineEventHandler`, `getQuery`, `readBody`, `getRouterParam`, `createError`, `setResponseStatus` — do NOT manually import these.
+- Explicitly import: third-party packages, `shared/types`, Pinia stores.
+- No barrel files. Import from source file directly.
+
+### File Naming
+- Components: `PascalCase.vue`
+- Stores: `camelCase.ts`
+- API routes: Nitro convention (`index.get.ts`, `[id].delete.ts`)
+- Directories: `kebab-case`
+
+### API Routes
+- Use `defineEventHandler` from Nitro. No Express, no NestJS.
+- Use Nitro utilities: `getQuery()`, `readBody()`, `getRouterParam()`, `createError()`, `setResponseStatus()`.
+- Return typed responses matching `shared/types/` interfaces.
+
+### State Management
+- All client state in Pinia stores (`app/stores/`).
+- Stores call `$fetch`. No direct DB access from client.
+- No Vuex. No `provide`/`inject` for app-wide state.
+- No prop drilling beyond 2 levels — use a store.
+
+## Styling
+
+### Tailwind CSS v4
+- All tokens in `@theme` block in `app/assets/css/main.css`. No `tailwind.config.js`.
+- Use semantic tokens: `bg-bg-primary`, `text-accent`, `rounded-md` — not raw hex.
+- Gradient syntax: `bg-linear-to-*` (not `bg-gradient-to-*`).
+
+### Design System (Dieter Rams / Braun)
+- Colors: Warm neutrals. Accent is Braun-orange `#D4600C` — reserved for primary actions only.
+- Typography: Inter variable font. Lowercase nav labels. Sentence case headings.
+- Spacing: 8px base unit (`--space-2` through `--space-20`).
+- Border radius: Default 4px (`--radius-md`). Crisp, not bubbly. No 16px+ radii.
+- Shadows: Warm-tinted, minimal. No colored shadows or glows.
+- Motion: 100ms hover, 200ms expand, 350ms page transition. No bounce/spring.
+- Icons: Phosphor Icons (light weight, 1.5px stroke, 20px default). Single color via `currentColor`.
+- Focus: `:focus-visible` only. 2px solid accent ring, 2px offset.
+
+### Styling DON'Ts
+- No inline `style="..."` attributes.
+- No cool blue-greys or pure greys — use warm-tinted greys.
+- No bouncy/spring animations.
+- No mixed icon sets or emoji as icons.
+
+## Database
+
+Tables in `db/schema/index.ts`: `users`, `items`, `tags`, `item_tags`, `sessions`. All IDs are UUIDs. Cascade deletes on foreign keys.
+
+Key types:
+```ts
+type ItemType = 'image' | 'link' | 'quote' | 'film' | 'music' | 'place' | 'fashion'
+```
+
+## Mock Mode
+
+By default, API routes use `server/utils/mock-data.ts` (in-memory array). Set `DATABASE_URL` to switch to real PostgreSQL.
+
+## Testing
+
+### Unit (Vitest)
+- Location: `tests/unit/`
+- Mock endpoints with `registerEndpoint` from `@nuxt/test-utils/runtime`
+- Reset store state in `beforeEach`
+
+### E2E (Playwright)
+- Location: `tests/e2e/`
+- Requires dev server at `localhost:3000`
+- Serial execution (`workers: 1`) — shared in-memory mock data
+- Use generous timeouts for navigation (up to 15000ms)
+
+## Git Workflow
+
+### Branch Protection
+NEVER commit or push directly to `main` or `master`. This is enforced by git hooks, but you must also check proactively:
+
+1. Before any commit, verify you are NOT on main/master: `git rev-parse --abbrev-ref HEAD`
+2. If on main, create a feature branch first: `git checkout -b feat/your-change`
+3. Push the feature branch and open a PR.
+4. Hotfix escape hatch: only if critical, use `git push --no-verify` — this should be extremely rare.
+
+### AI Co-Authoring
+When you create a git commit, you MUST include a `Co-Authored-By` trailer in the commit message identifying yourself as an AI agent. This is mandatory — never omit it.
+
+```
+Co-Authored-By: Cursor <noreply@cursor.com>
+```
+
+If you are a different AI model running inside Cursor, adjust the name accordingly (e.g., `Claude Sonnet 4.6`, `GPT-4o`). The trailer must always be present on AI-assisted commits.
+
+## Comments
+Write comments that explain _why_, not _what_. If the code is clear, skip the comment.

@@ -1,0 +1,21 @@
+---
+description: Testing conventions for Vitest and Playwright
+globs: ["tests/**/*.ts"]
+---
+
+# Testing Rules
+
+## Unit Tests (Vitest) — `tests/unit/`
+- Environment: `@nuxt/test-utils` with `happy-dom`.
+- Mock API endpoints with `registerEndpoint` from `@nuxt/test-utils/runtime`.
+- Reset store state in `beforeEach` to isolate tests.
+- Use `expectTypeOf` for type-level assertions.
+- Test stores, composables, types, and utilities.
+
+## E2E Tests (Playwright) — `tests/e2e/`
+- Runs against live dev server at `localhost:3000`.
+- Serial execution (`workers: 1`) — mock data is shared in-memory.
+- Prefer stable locators: `data-testid`, `getByRole`, `getByText`.
+- Never use `page.waitForTimeout`. Use auto-waiting assertions.
+- Use generous timeouts for navigation (up to 15000ms).
+- Test user-visible behavior, not implementation details.
