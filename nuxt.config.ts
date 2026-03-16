@@ -5,11 +5,7 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
-  modules: [
-    '@pinia/nuxt',
-    '@nuxt/image',
-    '@nuxt/eslint',
-  ],
+  modules: ['@pinia/nuxt', '@nuxt/image', '@nuxt/eslint', '@nuxt/content'],
 
   vite: {
     plugins: [tailwindcss()],
@@ -22,9 +18,7 @@ export default defineNuxtConfig({
 
   css: ['~/assets/css/main.css'],
 
-  components: [
-    { path: '~/components', pathPrefix: false },
-  ],
+  components: [{ path: '~/components', pathPrefix: false }],
 
   devtools: { enabled: true },
   typescript: { strict: true },

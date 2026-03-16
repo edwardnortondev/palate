@@ -9,6 +9,7 @@ Palate is a private taste archive — a single-page Nuxt 4 app where users save 
 - **Styling:** Tailwind CSS v4 (CSS-first config via `@theme` in `app/assets/css/main.css`)
 - **Database:** PostgreSQL via Drizzle ORM (schema in `db/schema/index.ts`)
 - **Testing:** Vitest (unit) + Playwright (e2e)
+- **Docs:** Nuxt Content v3 — markdown in `content/docs/`, served at `/docs/*`
 - **Types:** Shared across app/server in `shared/types/index.ts`
 - **Package manager:** pnpm
 
@@ -26,6 +27,8 @@ palate/
     stores/             # items.ts, tags.ts (Pinia)
     composables/        # Reusable Vue composables
     app.vue             # Root: <NuxtLayout><NuxtPage /></NuxtLayout>
+  content/
+    docs/               # Nuxt Content markdown (served at /docs/*)
   server/
     api/                # Nitro route handlers (file-based)
       items/            # index.get.ts, index.post.ts, [id].get.ts, [id].delete.ts
@@ -62,33 +65,39 @@ Mock data mutates in memory. POST/DELETE persist until the server restarts.
 ## Code conventions
 
 ### TypeScript
+
 - Strict mode is on. Never disable it.
 - Never use `any`. Use `unknown` and narrow.
 - Types shared between app and server go in `shared/types/index.ts`. Never duplicate type definitions.
 
 ### Vue components
+
 - Always use `<script setup lang="ts">`.
 - Type props with `defineProps<{...}>()`, emits with `defineEmits<{...}>()`.
 - Keep components under ~150 lines. Split if larger.
 - One component per file.
 
 ### Imports
+
 - Nuxt auto-imports components, composables, and Nitro utilities. Do not manually import these (e.g., `ref`, `computed`, `useRoute`, `$fetch`, `defineEventHandler`, `getQuery`).
 - Explicitly import: third-party packages, `shared/types`, Pinia stores, and types from `shared/`.
 - No barrel files. Import directly from the source file.
 
 ### File naming
+
 - Vue components: `PascalCase.vue` (e.g., `ItemCard.vue`)
 - Pinia stores: `camelCase.ts` (e.g., `items.ts`)
 - API routes: Nitro convention (e.g., `index.get.ts`, `[id].delete.ts`)
 - Directories: `kebab-case`
 
 ### API routes
+
 - Use `defineEventHandler` from Nitro. No Express, no Nest.js.
 - Use Nitro utilities: `getQuery()`, `readBody()`, `getRouterParam()`, `createError()`, `setResponseStatus()`.
 - Return typed responses matching `shared/types/` interfaces.
 
 ### State management
+
 - All client state lives in Pinia stores (`app/stores/`).
 - Stores call `$fetch` against the Nitro API. No direct DB access from the client.
 - No Vuex. No `provide`/`inject` for app-wide state.
@@ -97,12 +106,14 @@ Mock data mutates in memory. POST/DELETE persist until the server restarts.
 ## Styling rules
 
 ### Tailwind CSS v4
+
 - All design tokens are defined in `app/assets/css/main.css` under `@theme`. There is no `tailwind.config.js`.
 - Use Tailwind utility classes for all layout and visual styling.
 - When a design token exists (e.g., `--color-bg-primary`, `--color-accent`, `--radius-md`), use it via Tailwind classes like `bg-bg-primary`, `text-accent`, `rounded-md`. Reference `@theme` tokens, not hardcoded values.
 - To add a new token, add it to `@theme` in `main.css`.
 
 ### Design system (Dieter Rams / Braun)
+
 The full design system is documented in `STYLE_GUIDE.md`. Key rules:
 
 - **Colors:** Warm neutrals (off-whites, warm greys, warm blacks). Accent is Braun-orange (`#D4600C`), reserved for primary actions and active states only. No gratuitous color.
@@ -115,6 +126,7 @@ The full design system is documented in `STYLE_GUIDE.md`. Key rules:
 - **Focus:** `:focus-visible` only (not `:focus`). 2px solid accent ring with 2px offset.
 
 ### What NOT to do with styling
+
 - No inline `style="..."` attributes. Use Tailwind classes and design tokens.
 - No cool blue-greys or pure greys. Use warm-tinted greys from the palette.
 - No bouncy/spring animations.
@@ -124,6 +136,7 @@ The full design system is documented in `STYLE_GUIDE.md`. Key rules:
 ## Testing
 
 ### Unit tests (Vitest)
+
 - Location: `tests/unit/`
 - Config: `vitest.config.ts` (uses `@nuxt/test-utils/config` with `happy-dom`)
 - Mock API endpoints with `registerEndpoint` from `@nuxt/test-utils/runtime`
@@ -131,6 +144,7 @@ The full design system is documented in `STYLE_GUIDE.md`. Key rules:
 - Test stores, composables, types, and utilities
 
 ### E2E tests (Playwright)
+
 - Location: `tests/e2e/`
 - Config: `playwright.config.ts` (Chromium only, single worker, serial execution)
 - Requires dev server running at `localhost:3000`
@@ -139,6 +153,7 @@ The full design system is documented in `STYLE_GUIDE.md`. Key rules:
 - Test user-visible behavior: page loads, filter interactions, search, form submission, navigation
 
 ### Adding tests
+
 - New store logic: add to `tests/unit/stores/`
 - New pages/features: add E2E tests to `tests/e2e/`
 - New utilities/types: add unit tests to `tests/unit/`
@@ -146,6 +161,7 @@ The full design system is documented in `STYLE_GUIDE.md`. Key rules:
 ## Database schema
 
 Tables defined in `db/schema/index.ts`:
+
 - `users` — id, email, passwordHash, timestamps
 - `items` — id, userId, type, title, description, imageUrl, sourceUrl, content, notes, timestamps
 - `tags` — id, userId, name, slug, createdAt
@@ -169,27 +185,38 @@ interface Item {
   content?: string
   notes?: string
   tags: Tag[]
-  savedAt: string   // ISO date string
+  savedAt: string // ISO date string
   updatedAt: string
 }
 
-interface Tag { id: string; name: string; slug: string; count?: number }
+interface Tag {
+  id: string
+  name: string
+  slug: string
+  count?: number
+}
 ```
 
 ## API routes
 
-| Method | Path | Handler file | Description |
-|--------|------|-------------|-------------|
-| GET | `/api/items` | `index.get.ts` | List items (supports `type`, `tag`, `search`, `page`, `perPage` query params) |
-| POST | `/api/items` | `index.post.ts` | Create item (body: `CreateItemInput`) |
-| GET | `/api/items/:id` | `[id].get.ts` | Get single item |
-| DELETE | `/api/items/:id` | `[id].delete.ts` | Delete item (returns 204) |
-| GET | `/api/tags` | `index.get.ts` | List all tags with item counts, sorted by count desc |
+| Method | Path             | Handler file     | Description                                                                   |
+| ------ | ---------------- | ---------------- | ----------------------------------------------------------------------------- |
+| GET    | `/api/items`     | `index.get.ts`   | List items (supports `type`, `tag`, `search`, `page`, `perPage` query params) |
+| POST   | `/api/items`     | `index.post.ts`  | Create item (body: `CreateItemInput`)                                         |
+| GET    | `/api/items/:id` | `[id].get.ts`    | Get single item                                                               |
+| DELETE | `/api/items/:id` | `[id].delete.ts` | Delete item (returns 204)                                                     |
+| GET    | `/api/tags`      | `index.get.ts`   | List all tags with item counts, sorted by count desc                          |
 
 ## Documentation
 
-VitePress docs live in `/Users/edwardnorton/Development/palate-docs/` (separate repo). Contains architecture overview, API reference, database docs, standards, and roadmap.
+Docs are built with **Nuxt Content v3** and live in `content/docs/` inside the main repo. They are served at `/docs/*` as part of the app — no separate build or repo.
+
+- `content.config.ts` defines the `docs` collection
+- `app/pages/docs/[...slug].vue` is the catch-all page (uses `layout: false` to skip the app layout)
+- Prose styles are in `app/assets/css/main.css` under `.prose-palate`
+
+Pages: overview, getting-started, architecture, api, database, standards, roadmap.
 
 ## Comments
 
-Write comments that explain *why*, not *what*. If the code is clear, don't add a comment restating it.
+Write comments that explain _why_, not _what_. If the code is clear, don't add a comment restating it.

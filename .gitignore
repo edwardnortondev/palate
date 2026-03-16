@@ -16,3 +16,16 @@ dist/
 # Misc
 .DS_Store
 *.log
+
+# Screenshots and visual testing artifacts
+*.png
+*.jpeg
+!content/**/*.png
+!content/**/*.jpeg
+!app/assets/**/*.png
+!app/assets/**/*.jpeg
+
+# Test artifacts
+test-results/
+playwright-report/
+coverage/
